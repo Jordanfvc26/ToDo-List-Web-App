@@ -1,0 +1,104 @@
+<!--navbar component-->
+<app-nav-bar></app-nav-bar>
+
+<div class="container">
+    <div class="row mt-4 mb-4">
+        <!--Form for add a new task-->
+        <div class="col-12 new-task">
+            <form [formGroup]="addTaskForm">
+                <h3 class="mx-4"><fa-icon [icon]="iconAddTask"></fa-icon> Agregar una nueva tarea</h3>
+                <!--Title-->
+                <div class="row mx-3 mt-4">
+                    <div class="col-12 mb-4">
+                        <label class="mb-1"><b>Título</b></label>
+                        <input type="text" class="form-control form-control-lg bg-light fs-6" formControlName="title"
+                            placeholder="Título*" [ngClass]="{
+                                'is-invalid': addTaskForm.get('title')?.hasError('required') && addTaskForm.get('title')?.touched || addTaskForm.get('title')?.hasError('pattern'),
+                                'is-valid': addTaskForm.get('title')?.value?.length >= 5 && addTaskForm.get('title')?.hasError('pattern') == false
+                                }">
+                        <div class="validators"
+                            *ngIf="addTaskForm.get('title')?.hasError('required') && addTaskForm.get('title')?.touched">
+                            <small>¡Este campo es requerido!</small>
+                        </div>
+                        <div class="validators" *ngIf="addTaskForm.get('title')?.hasError('pattern')">
+                            <small>¡Solo se permiten letras!</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Description-->
+                <div class="row mx-3">
+                    <div class="col-12 mb-4">
+                        <label class="mb-1"><b>Descripción</b></label>
+                        <textarea class="form-control form-control-lg bg-light fs-6" formControlName="description"
+                            placeholder="Descripción*" rows="3"
+                            [ngClass]="{
+                                    'is-invalid': addTaskForm.get('description')?.hasError('required') && addTaskForm.get('description')?.touched || addTaskForm.get('description')?.hasError('pattern'),
+                                    'is-valid': addTaskForm.get('description')?.value?.length >=10 && addTaskForm.get('description')?.hasError('pattern') == false }">
+                                </textarea>
+                        <div class="validators"
+                            *ngIf="addTaskForm.get('description')?.hasError('required') && addTaskForm.get('description')?.touched">
+                            <small>¡Este campo es requerido!</small>
+                        </div>
+                        <div class="validators" *ngIf="addTaskForm.get('description')?.hasError('pattern')">
+                            <small>¡Solo se permiten letras!</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Button-->
+                <div class="action-button mb-3 mx-4">
+                    <button [disabled]="tasksTodo.length==0 && tasksCompleted.length==0" type="button"
+                        class="btn btn-danger btn-md btn-delete" (click)="deleteAllTasks()">Elimininar todo</button>
+                    <button [disabled]="!addTaskForm.valid" type="button" class="btn btn-success btn-md"
+                        (click)="addTask()">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div cdkDropListGroup>
+                <div class="row">
+                    <!--Todas las tareas-->
+                    <div class="col-md-6 tasks-todo">
+                        <h3 class="mx-4 mt-2 mb-3"><fa-icon [icon]="iconTodoTasks"></fa-icon> Tareas por hacer:
+                            {{totalTasksTodo}}</h3>
+                        <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="tasksTodo"
+                            [cdkDropListConnectedTo]="[doneList]" class="example-list"
+                            (cdkDropListDropped)="drop($event)">
+                            <div class="example-box" *ngFor="let item of tasksTodo; let i = index" cdkDrag>{{item.title}}
+                                <div class="box-icon-tasks">
+                                    <fa-icon class="iconDelete" [icon]="iconDeleteTask" (click)="deleteTask(item.title, item.id)"></fa-icon>
+                                    <fa-icon class="iconEdit" [icon]="iconEditTask" (click)="openModalTodoItem(editTask, item, true)"></fa-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Tareas completadas-->
+                    <div class="col-md-6 tasks-completed">
+                        <h3 class="mx-4 mt-2 mb-3"><fa-icon [icon]="iconCompletedTask"></fa-icon> Tareas completadas:
+                            {{totalTasksCompleted}}</h3>
+                        <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="tasksCompleted"
+                            [cdkDropListConnectedTo]="[todoList]" class="example-list"
+                            (cdkDropListDropped)="drop($event)">
+                            <div class="example-box" *ngFor="let item of tasksCompleted; let i = index" cdkDrag>
+                                {{item.title}}
+                                <div class="box-icon-tasks">
+                                    <fa-icon class="iconViewDetails" [icon]="iconViewTask" (click)="openModalTodoItem(editTask, item, false)"></fa-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal for edit or view task detail-->
+<ng-template #editTask>
+    <app-todo-item></app-todo-item>
+</ng-template>

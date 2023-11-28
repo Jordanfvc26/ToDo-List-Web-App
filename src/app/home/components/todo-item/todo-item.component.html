@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="modal-header">
+        <h4 class="modal-title"><fa-icon [icon]="iconEditTask"></fa-icon> {{titleModal}}</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="taskDetailForm">
+            <div class="row">
+                <!--Title-->
+                <div class="col-12 col-md-9 mb-3">
+                    <label class="mb-1"><b>Título</b></label>
+                    <input type="text" class="form-control form-control-lg bg-light fs-6" formControlName="title"
+                        placeholder="Título*" [readOnly]="!typeLocal">
+                </div>
+                <!--Status-->
+                <div class="col-12 col-md-3 mb-3">
+                    <label class="mb-1"><b>Estado</b></label>
+                    <input type="text" class="form-control form-control-lg bg-light fs-6" formControlName="completed"
+                        placeholder="Estado*" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <!--Description-->
+                <div class="col-12 mb-3">
+                    <label class="mb-1"><b>Descripción</b></label>
+                    <textarea class="form-control form-control-lg bg-light fs-6" formControlName="description"
+                        placeholder="Descripción*" rows="7" [readOnly]="!typeLocal"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button (click)="modal.dismissAll()" class="btn btn-secondary" type="button"><fa-icon></fa-icon> {{typeLocal ? 'Cancelar' : 'Aceptar'}}</button>
+        <button *ngIf="typeLocal; "(click)="editTask()" type="button" class="btn btn-next btn">Actualizar</button>
+    </div>
+</div>

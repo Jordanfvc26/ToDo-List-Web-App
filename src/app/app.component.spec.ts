@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { SweetAlerts } from './home/alerts/alerts.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    declarations: [AppComponent]
+    imports: [RouterTestingModule, FontAwesomeModule],
+    declarations: [AppComponent],
   }));
+  
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
